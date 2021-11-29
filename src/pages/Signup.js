@@ -1,16 +1,38 @@
 import { useNavigate } from "react-router-dom";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../config/config";
+import { useState } from "react";
 import '../styles/formStyle.css'
 import { Layout } from 'antd';
 import { Form, Input, Button } from 'antd';
 const { Header } = Layout;
 
 const Signup = () => {
-    const navigate = useNavigate()
-    const signupHandler = () => {  
+  const navigate = useNavigate()
+  const [useremail, setUserEmail] = useState('');
+  //const [username, setUserName] = useState('');
+  const [userpass, setUserPass] = useState('');
+
+  const signupHandler = async() => {
+    try{
+    const createUser = await createUserWithEmailAndPassword(auth, useremail,userpass);
+    if(createUser)
+    {
       navigate('../login')
-      }
+
+    }
+    console.log(createUser)
+  }
+  catch(error)
+  {
+    console.log(error.message)
+  }
+}
+  
 
 
+    
+    
   return (
 
     <div>
@@ -31,33 +53,23 @@ const Signup = () => {
 
           label="Useremail"
           name="useremail"
+        
           rules={[
             {
               required: true,
               message: 'Please input your email!',
+            
             },
           ]}
         >
-          <Input />
+          <Input  onChange={(e) => {setUserEmail(e.target.value)}}/>
         </Form.Item>
 
-        <Form.Item
-
-          label="Username"
-          name="username"
-          rules={[
-            {
-              required: true,
-              message: 'Please input your username!',
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
+       
 
         <Form.Item
           label="Password"
-          name="password"
+          name="userpass"
           rules={[
             {
               required: true,
@@ -65,7 +77,7 @@ const Signup = () => {
             },
           ]}
         >
-          <Input.Password />
+          <Input.Password onChange={(e) => {setUserPass(e.target.value)}}/>
         </Form.Item>
 
 
